@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+
+    <div id="form">
+        <div id="messages"></div>
+        <input type="text" id="user" placeholder="user">
+        <input type="text" id="message" placeholder="message">
+        <button>send</button>
+    </div>
+
+    <script type="text/javascript">
+
+
+        const renderMessage = (message) => {
+            $('#messages').append('<div class="message">' + message.author + ' - ' + message.message + '</div>');
+        };
+
+        var socket = io('http://localhost:3000');
+
+        socket.on('receivedMessage', (message) => renderMessage(message))
+        $('button').click((e) => {
+            e.preventDefault();
+            let message = {
+                author: $('#user').val(),
+                message: $('#message').val(),
+            };
+
+            renderMessage(message);
+            socket.emit('sendMessage', message);
+        });
+
+    </script>
+</body>
+
+</html>
